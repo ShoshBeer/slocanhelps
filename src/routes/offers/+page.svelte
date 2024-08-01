@@ -24,12 +24,12 @@
     filteredData = data.data.filter(offer => {
       if ((type === 'allTypes' || !type) && (community === 'allCommunities' || !community)) return true;
       if (type === 'allTypes' || !type) {
-        return offer.gristHelper_Display2 === community;
+        return offer.gristHelper_Display2?.toLowerCase() === community;
       }
       if (community === 'allCommunities' || !community) {
         return offer.Type?.some(offerType => offerType.toLowerCase().includes(type));
       }
-      return offer.Type?.some(offerType => offerType.toLowerCase().includes(type)) && offer.gristHelper_Display2 === community;
+      return offer.Type?.some(offerType => offerType.toLowerCase().includes(type)) && offer.gristHelper_Display2?.toLowerCase() === community;
     });
 
   };
@@ -57,29 +57,29 @@
     rounded=""
     border="">
 
-    <TabAnchor href="/offers#allTypes&" selected={type === 'allTypes'}>All Offers</TabAnchor>
-    <TabAnchor href="/offers#accommodation&" selected={type === 'accommodation'}>
+    <TabAnchor href="/offers#allTypes&{community}" selected={type === 'allTypes'}>All Offers</TabAnchor>
+    <TabAnchor href="/offers#accommodation&{community}" selected={type === 'accommodation'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:house-with-garden" />&nbsp; Accommodation
       </div>
     </TabAnchor>
-    <TabAnchor href="/offers#animals&" selected={type === 'animals'}>
+    <TabAnchor href="/offers#animals&{community}" selected={type === 'animals'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:goat" />&nbsp; Animals
       </div>
     </TabAnchor>
       <!-- <FluentEmojiHighContrastGoat /> Animals</TabAnchor> -->
-    <TabAnchor href="/offers#transportation&" selected={type === 'transportation'}>
+    <TabAnchor href="/offers#transportation&{community}" selected={type === 'transportation'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:sport-utility-vehicle" />&nbsp; Transportation
       </div>
     </TabAnchor>
-    <TabAnchor href="/offers#labour&" selected={type === 'labour'}>
+    <TabAnchor href="/offers#labour&{community}" selected={type === 'labour'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:flexed-biceps" />&nbsp; Labour
       </div>
     </TabAnchor>
-    <TabAnchor href="/offers#support&" selected={type === 'support'}>
+    <TabAnchor href="/offers#support&{community}" selected={type === 'support'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:people-hugging" />&nbsp; Community Supports
       </div>
