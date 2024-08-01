@@ -4,7 +4,7 @@
   import Icon from '@iconify/svelte';
 
 	export let data;
-  let type = $page.url.hash.replace('#', '');
+  let [type, community] = $page.url.hash.replace('#', '').split('&');
 
   let filteredData = data.data;
 
@@ -17,20 +17,21 @@
     'Food': 'fluent-emoji-high-contrast:fork-knife-plate',
   };
 
-  $: type = $page.url.hash.replace('#', '');
+  $: [type, community] = $page.url.hash.replace('#', '').split('&');
 
   $: {
 
-    filteredData = data.data.filter((offer) => {
-      if (type === '') return true;
-      if (type === 'accommodation') return offer.Type && offer.Type.indexOf('Accommodation') !== -1;
-      if (type === 'animals') return offer.Type && offer.Type.indexOf('Animals') !== -1;
-      if (type === 'transportation') return offer.Type && offer.Type.indexOf('Transportation') !== -1;
-      if (type === 'labour') return offer.Type && offer.Type.indexOf('Labour') !== -1;
-      if (type === 'support') return offer.Type && offer.Type.indexOf('Community Support') !== -1;
-      if (type === 'food') return offer.Type && offer.Type.indexOf('Food') !== -1;
-      return true;
-    })
+    filteredData = data.data.filter(offer => {
+      if ((type === 'allTypes' || !type) && (community === 'allCommunities' || !community)) return true;
+      if (type === 'allTypes' || !type) {
+        return offer.gristHelper_Display2 === community;
+      }
+      if (community === 'allCommunities' || !community) {
+        return offer.Type?.some(offerType => offerType.toLowerCase().includes(type));
+      }
+      return offer.Type?.some(offerType => offerType.toLowerCase().includes(type)) && offer.gristHelper_Display2 === community;
+    });
+
   };
 
 </script>
@@ -56,29 +57,29 @@
     rounded=""
     border="">
 
-    <TabAnchor href="/offers#" selected={$page.url.hash === ''}>All Offers</TabAnchor>
-    <TabAnchor href="/offers#accommodation" selected={$page.url.hash === '#accommodation'}>
+    <TabAnchor href="/offers#allTypes&" selected={type === 'allTypes'}>All Offers</TabAnchor>
+    <TabAnchor href="/offers#accommodation&" selected={type === 'accommodation'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:house-with-garden" />&nbsp; Accommodation
       </div>
     </TabAnchor>
-    <TabAnchor href="/offers#animals" selected={$page.url.hash === '#animals'}>
+    <TabAnchor href="/offers#animals&" selected={type === 'animals'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:goat" />&nbsp; Animals
       </div>
     </TabAnchor>
       <!-- <FluentEmojiHighContrastGoat /> Animals</TabAnchor> -->
-    <TabAnchor href="/offers#transportation" selected={$page.url.hash === '#transportation'}>
+    <TabAnchor href="/offers#transportation&" selected={type === 'transportation'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:sport-utility-vehicle" />&nbsp; Transportation
       </div>
     </TabAnchor>
-    <TabAnchor href="/offers#labour" selected={$page.url.hash === '#labour'}>
+    <TabAnchor href="/offers#labour&" selected={type === 'labour'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:flexed-biceps" />&nbsp; Labour
       </div>
     </TabAnchor>
-    <TabAnchor href="/offers#support" selected={$page.url.hash === '#support'}>
+    <TabAnchor href="/offers#support&" selected={type === 'support'}>
       <div class="flex items-center">
         <Icon icon="fluent-emoji-high-contrast:people-hugging" />&nbsp; Community Supports
       </div>
